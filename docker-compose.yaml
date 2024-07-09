@@ -1,6 +1,19 @@
 version: "3.4"
 
 services:
+  react-app:
+    build:
+      context: ./web-app
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    networks:
+      - common.network
+    ports:
+      - "5001:80"
+    depends_on:
+      - api
+
   api:
     build:
       context: ./back-end

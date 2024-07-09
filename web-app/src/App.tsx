@@ -10,9 +10,8 @@ import { Account } from './models/Account';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 
 function App() {
-
   const client = new ApolloClient({
-    uri: 'http://localhost:4000/graphql', // URL do seu servidor GraphQL
+    uri: process.env.REACT_APP_NODE_API_URI ?? 'http://localhost:4000/graphql', 
     cache: new InMemoryCache(),
   });
 

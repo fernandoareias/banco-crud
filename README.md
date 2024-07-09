@@ -1,5 +1,57 @@
 # Requests back-end
 
+## Rodando o projeto
+
+`docker-compose up --build`
+
+## Queries e mutations
+
+### List transactions
+
+http://localhost:4000/graphql
+
+query {
+transactions {
+id
+type
+amount
+fromAccount {
+accountNumber
+}
+toAccount {
+accountNumber
+}
+date
+}
+}
+
+### Execute transaction
+
+http://localhost:4000/graphql
+
+mutation {
+sendTransaction(fromAccountId: "000001", toAccountId: "000002", amount: 100.0) {
+id
+type
+amount
+fromAccount {
+accountNumber
+}
+toAccount {
+accountNumber
+}
+date
+}
+}
+
+### Query balance
+
+http://localhost:4000/graphql
+
+query {
+accountBalance(accountId: "000001")
+}
+
 ## Registre as contas no mongoDB
 
 ### Conta 01
@@ -31,6 +83,7 @@
 
 | Application    | Host                   |
 | :------------- | :--------------------- |
+| FRONT          | http://localhost:5001  |
 | API            | http://localhost:4000  |
 | MongoDB        | http://localhost:27017 |
 | Prometheus     | http://localhost:9090  |
