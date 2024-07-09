@@ -31,7 +31,7 @@ const CreateTransaction: React.FC<CreateTransactionProps> = ({ show, onClose, ch
             <div className="relative p-6 flex-auto text-white flex gap-4">
 
               <div className='' id='proponent'>
-                <h2 className='mb-6 text-xl'>Proponent</h2>
+                {/* <h2 className='mb-6 text-xl'></h2> */}
               
                 {/* <div>
                   <div className='text-left mb-4'>
@@ -55,7 +55,7 @@ const CreateTransaction: React.FC<CreateTransactionProps> = ({ show, onClose, ch
                 </div>
               </div>
               <div className='' id='proposal'>
-                <h2 className='mb-6 text-xl'>Proposal</h2>
+                {/* <h2 className='mb-6 text-xl'></h2> */}
                 {/* <div className=''>
                    <div className='grid grid-cols-2 gap-4'>
                       <div className='text-left mb-4'>
