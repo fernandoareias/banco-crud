@@ -1,0 +1,87 @@
+version: "3.4"
+
+services:
+  api:
+    build:
+      context: ./back-end
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    networks:
+      - common.network
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:7.0
+    command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27017"]
+    ports:
+      - 27017:27017
+    networks:
+      - common.network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: echo "try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'host.docker.internal:27017'}]}) }" | mongosh --port 27017 --quiet
+      interval: 5s
+      timeout: 30s
+      start_period: 0s
+      start_interval: 1s
+      retries: 30
+
+  mongodb-exporter:
+    image: percona/mongodb_exporter:2.37.0
+    container_name: percona
+    command: --mongodb.uri=mongodb://host.docker.internal:27017/admin --collect-all --discovering-mode
+    ports:
+      - 9216:9216
+    networks:
+      - common.network
+    depends_on:
+      - mongo
+
+  prometheus:
+    build:
+      context: ./infrastructure/prometheus
+      dockerfile: Dockerfile
+      args:
+        version: 1
+    image: prometheus-local
+    restart: always
+    ports:
+      - 9090:9090
+    networks:
+      - common.network
+
+  granafa:
+    build:
+      context: ./infrastructure/grafana
+      dockerfile: ./Dockerfile
+      args:
+        version: 1
+    image: grafana-local
+    restart: always
+    ports:
+      - 3000:3000
+    networks:
+      - common.network
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.47.0
+    container_name: cadvisor
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - "8080:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+
+networks:
+  common.network:
+    driver: bridge
