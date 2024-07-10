@@ -8,6 +8,10 @@ import ExtratoPage from './pages/ExtratoPage';
 import { AccountContext } from './contexts/AccountContext';
 import { Account } from './models/Account';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import { ToastContainer } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
+import AccountRoute from './guards/AccountGuard';
 
 function App() {
   const client = new ApolloClient({
@@ -20,14 +24,28 @@ function App() {
 
   return (
     <>
+     <div className="fixed top-0 left-0 right-0 z-50 flex justify-center">
+     <ToastContainer
+      position="top-center"
+      autoClose={5000}
+      hideProgressBar={false}
+      newestOnTop={false}
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+      theme="light"
+      />
+    </div>
     <ApolloProvider client={client}>
       <AccountContext.Provider value={{ account, setAccount }}> 
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/extratos" element={<ExtratoPage />} />
-          </Routes>
-        </BrowserRouter>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/extratos" element={<AccountRoute element={<ExtratoPage />} />} />
+        </Routes>
+      </BrowserRouter>
       </AccountContext.Provider>
      </ApolloProvider>
     </>

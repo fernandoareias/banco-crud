@@ -11,6 +11,7 @@ interface InputProps {
     isRequired?: boolean;
     minLength?: number;
     maxLength?: number;
+    type?: string;
   }
   
 const Input: React.FC<InputProps> = ({
@@ -22,13 +23,15 @@ const Input: React.FC<InputProps> = ({
   inputClassName = "",
   isRequired = false,
   minLength = 0,  
-  maxLength = 100}) => 
+  maxLength = 100,
+  type = "text"
+}) => 
 {
   return (
     <div className='text-left mt-5 '>
         <label htmlFor="text" className={"mb-2 text-sm font-medium " + labelClassName} style={{ color: '#505D63' }}>{label + (isRequired ? " *" : "")}</label>
         <input 
-          type="text" 
+          type={type} 
           name="text" 
           id="text" 
           value={value} 
